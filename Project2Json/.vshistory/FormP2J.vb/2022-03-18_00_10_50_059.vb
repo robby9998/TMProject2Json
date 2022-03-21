@@ -2,7 +2,6 @@
 Imports System.Data.SqlClient               ' SQL handling
 Imports System.Text.RegularExpressions      ' Regular Expressions
 
-' my first brnach change
 
 ' General Comments
 ' ================
