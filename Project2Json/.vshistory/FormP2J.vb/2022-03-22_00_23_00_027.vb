@@ -1,27 +1,30 @@
 ﻿Option Explicit On                          ' Declare everything
 Imports System.Data.SqlClient               ' SQL handling
 Imports System.Text.RegularExpressions      ' Regular Expressions
-Imports System.Text.Json                    ' Serialize Objects
-
-' my first brnach change
 
 ' General Comments
 ' ================
 ' Determine which .Net Framework versions are on the machine
 ' Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\NET Framework Setup\NDP' -recurse | Get-ItemProperty -name Version,Release -EA 0 | Where { $_.PSChildName -match '^(?!S)\p{L}'} | Select Case PSChildName, Version, Release
+
+' SQL Express 2016 LocalDB (from Visual Studio) brings: (localdb)\MSSQLLocalDB as default instance
+' need to launch the db: sqllocaldb start MSSQLLocalDB
+
 ' VB Basic: Always Option Base 0 => All Arrays zero based
 
 
 Public Class FormP2J
     Inherits Form
+    Dim myGotProjects As Boolean
     Dim myRED As Color
     Dim myGreen As Color
 
     Private Sub FormP2J_Load()
+        MyTimer.Interval = 200       ' 200 milliseconds for first call
+        MyTimer.Start()              ' Timer starts functioning
+        myGotProjects = False
         myRED = Color.FromArgb(255, 50, 50)
         myGreen = Color.FromArgb(50, 255, 50)
-        myStatus.Text = "Status: Loading Form ..."
-        myStatus.ForeColor = myGreen
     End Sub
 
     Private Function GetProjects() As Boolean
@@ -33,12 +36,17 @@ Public Class FormP2J
 
         Dim myCounter As Integer
 
-        ' Create a Connection object and open connection
+        ' Create a Connection object.
+        'myCon = New SqlConnection("Data Source=(localdb)\MSSQLLocalDB;Integrated Security=True")
         myCon = New SqlConnection("Data Source=RKAMVGEMSDBP\TEAMMATE;Database=TeamMate_PROD;Integrated Security=True")
+
+        ' Open the connection.
         myCon.Open()
 
         ' Create a Command object.
         myCmd = myCon.CreateCommand
+        'myCmd.CommandText = "SELECT ID, FirstName, LastName FROM Persons"
+        'myCmd.CommandText = "SELECT dbo.NG_Project.ID AS P_ID, dbo.NG_Project.Title AS P_Title, dbo.NG_ProjectPhaseDefinition.Title AS P_Phase FROM (dbo.NG_Project LEFT JOIN dbo.NG_ProjectPhaseCurrent ON dbo.NG_Project.ID = dbo.NG_ProjectPhaseCurrent.ProjectID) LEFT JOIN (dbo.NG_ProjectPhase LEFT JOIN dbo.NG_ProjectPhaseDefinition ON dbo.NG_ProjectPhase.ProjectPhaseDefID = dbo.NG_ProjectPhaseDefinition.ID) ON dbo.NG_ProjectPhaseCurrent.ProjectPhaseID = dbo.NG_ProjectPhase.ID WHERE ((dbo.NG_ProjectPhaseDefinition.Title='Planned') OR (dbo.NG_ProjectPhaseDefinition.Title='On-going'));"
         myCmd.CommandText = "SELECT dbo.NG_Project.ID AS P_ID, dbo.NG_Project.Title AS P_Title, dbo.NG_ProjectPhaseDefinition.Title AS P_Phase FROM (dbo.NG_Project LEFT JOIN dbo.NG_ProjectPhaseCurrent ON dbo.NG_Project.ID = dbo.NG_ProjectPhaseCurrent.ProjectID) LEFT JOIN (dbo.NG_ProjectPhase LEFT JOIN dbo.NG_ProjectPhaseDefinition ON dbo.NG_ProjectPhase.ProjectPhaseDefID = dbo.NG_ProjectPhaseDefinition.ID) ON dbo.NG_ProjectPhaseCurrent.ProjectPhaseID = dbo.NG_ProjectPhase.ID WHERE ((dbo.NG_ProjectPhaseDefinition.Title='Planned') OR (dbo.NG_ProjectPhaseDefinition.Title='On-going') OR (dbo.NG_ProjectPhaseDefinition.Title='Finalised')) ORDER BY dbo.NG_Project.Title ASC;"
         ' Get the data in a reader
         myReader = myCmd.ExecuteReader()
@@ -51,30 +59,11 @@ Public Class FormP2J
         Loop
 
         myCon.Close()
+        myGotProjects = True    ' Set flag to prevent repeated call, only get Projects one time
+        Return myGotProjects
     End Function
 
-    Public Function EncodeBase64(input As String) As String
-        Return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input))
-    End Function
-
-    Private Sub Quit_Click(sender As Object, e As EventArgs) Handles Quit.Click
-        Application.Exit()
-    End Sub
-
-    Private Sub ListBoxProjects_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBoxProjects.SelectedIndexChanged
-        Dim myResult As String
-
-        If ListBoxProjects.SelectedIndex >= 0 Then
-            myResult = GenerateJson()
-            If myResult <> "" Then
-                myStatus.Text = "Status: File generated: " & myResult
-                myStatus.ForeColor = myGreen
-                Process.Start("C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", "https://script.google.com/a/macros/roche.com/s/AKfycbw1UesP3Xr6y4axkCmzIjCVZhLwVBXldCD1jk6zMp85/dev?file=" & Net.WebUtility.UrlEncode(myResult))
-            End If
-        End If
-    End Sub
-
-    Private Sub CreateJson_Click(sender As Object, e As EventArgs) Handles CreateJson.Click
+    Private Function GenerateJson() As String
         Dim myCon As String
         Dim mySql As String
         'Dim mySql2 As String
@@ -263,10 +252,56 @@ Public Class FormP2J
             myStatus.Text = "Exception: " & ex.Message
             myStatus.ForeColor = myRED
         End Try
+    End Function
+
+
+    Public Function EncodeBase64(input As String) As String
+        Return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input))
+    End Function
+
+    Private Sub Quit_Click(sender As Object, e As EventArgs) Handles Quit.Click
+        Application.Exit()
     End Sub
-End Class
 
+    Private Sub MyTimer_Tick(sender As Object, e As EventArgs) Handles MyTimer.Tick
+        ' Properties set to be enabled and runs every 5 seconds
+        ' Here it tries to Ping the DB Server and if available green circle, otherwise red circle and warning text
+        MyTimer.Interval = 10000       ' 10 seconds for subsequent calls
 
-Public Class DataForJson
+        Dim MyPing As New Net.NetworkInformation.Ping
+        Dim MyPingReply As Net.NetworkInformation.PingReply
+        Try
+            MyPingReply = MyPing.Send("RKAMVGEMSDBP", 1000)    ' Servername, timeout ms            
+            If MyPingReply.Status = Net.NetworkInformation.IPStatus.Success Then
+                myStatus.Text = "Status: Connection to Server OK."
+                myStatus.ForeColor = myGreen
+                MyTimer.Stop()               ' No need to check for VPN any more, project list hopefully was obtained
+                If Not myGotProjects Then    ' Do this only one time
+                    If GetProjects() = False Then
+                        myStatus.Text = "Status: Error with getting projects."
+                        myStatus.ForeColor = myRED
+                    End If
+                End If
+            Else
+                myStatus.Text = "Status: Cannot find Server. Network? VPN Active?"
+                myStatus.ForeColor = myRED
+            End If
+        Catch ex As Exception
+            myStatus.Text = "Status: PING Exception. Network? VPN Active?"
+            myStatus.ForeColor = myRED
+        End Try
+    End Sub
 
+    Private Sub ListBoxProjects_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ListBoxProjects.SelectedIndexChanged
+        Dim myResult As String
+
+        If ListBoxProjects.SelectedIndex >= 0 Then
+            myResult = GenerateJson()
+            If myResult <> "" Then
+                myStatus.Text = "Status: File generated: " & myResult
+                myStatus.ForeColor = myGreen
+                Process.Start("C:\Program Files (x86)\Google\Chrome\Application\chrome.exe", "https://script.google.com/a/macros/roche.com/s/AKfycbw1UesP3Xr6y4axkCmzIjCVZhLwVBXldCD1jk6zMp85/dev?file=" & Net.WebUtility.UrlEncode(myResult))
+            End If
+        End If
+    End Sub
 End Class

@@ -22,14 +22,13 @@ Partial Class FormP2J
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.ListBoxProjects = New System.Windows.Forms.ListBox()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
         Me.Quit = New System.Windows.Forms.Button()
+        Me.MyTimer = New System.Windows.Forms.Timer(Me.components)
         Me.myStatus = New System.Windows.Forms.Label()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.CreateJson = New System.Windows.Forms.Button()
-        Me.TextBox2 = New System.Windows.Forms.TextBox()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'ListBoxProjects
@@ -37,20 +36,20 @@ Partial Class FormP2J
         Me.ListBoxProjects.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.ListBoxProjects.FormattingEnabled = True
         Me.ListBoxProjects.ItemHeight = 18
-        Me.ListBoxProjects.Location = New System.Drawing.Point(15, 281)
+        Me.ListBoxProjects.Location = New System.Drawing.Point(15, 119)
         Me.ListBoxProjects.Name = "ListBoxProjects"
-        Me.ListBoxProjects.Size = New System.Drawing.Size(492, 130)
+        Me.ListBoxProjects.Size = New System.Drawing.Size(492, 292)
         Me.ListBoxProjects.TabIndex = 3
         '
-        'Label1
+        'Label5
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!)
-        Me.Label1.Location = New System.Drawing.Point(12, 39)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(425, 13)
-        Me.Label1.TabIndex = 2
-        Me.Label1.Text = "In case of any error message please provide a screenshot to roland.schauer@roche." &
+        Me.Label5.AutoSize = True
+        Me.Label5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!)
+        Me.Label5.Location = New System.Drawing.Point(12, 39)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(425, 13)
+        Me.Label5.TabIndex = 7
+        Me.Label5.Text = "In case of any error message please provide a screenshot to roland.schauer@roche." &
     "com"
         '
         'Quit
@@ -64,69 +63,43 @@ Partial Class FormP2J
         Me.Quit.Text = "Quit"
         Me.Quit.UseVisualStyleBackColor = False
         '
+        'MyTimer
+        '
+        Me.MyTimer.Enabled = True
+        Me.MyTimer.Interval = 200
+        '
         'myStatus
         '
         Me.myStatus.AutoSize = True
         Me.myStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.myStatus.Location = New System.Drawing.Point(11, 15)
         Me.myStatus.Name = "myStatus"
-        Me.myStatus.Size = New System.Drawing.Size(138, 15)
-        Me.myStatus.TabIndex = 1
-        Me.myStatus.Text = "Status: Initialising ..."
+        Me.myStatus.Size = New System.Drawing.Size(161, 15)
+        Me.myStatus.TabIndex = 10
+        Me.myStatus.Text = "Status: Checking VPN ..."
         '
         'TextBox1
         '
         Me.TextBox1.BackColor = System.Drawing.SystemColors.Control
         Me.TextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.TextBox1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TextBox1.Location = New System.Drawing.Point(12, 64)
+        Me.TextBox1.Location = New System.Drawing.Point(16, 79)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(564, 58)
-        Me.TextBox1.TabIndex = 3
-        Me.TextBox1.Text = "Pick the projectId from the URL" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Example: https://gas.roche.com/TeamMate/Project#" &
-    "!/Project?projectId=50&assessmentId=14" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Enter it (in this case 50) in the field " &
-    "below and click the button."
-        '
-        'CreateJson
-        '
-        Me.CreateJson.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CreateJson.Location = New System.Drawing.Point(144, 125)
-        Me.CreateJson.Name = "CreateJson"
-        Me.CreateJson.Size = New System.Drawing.Size(105, 24)
-        Me.CreateJson.TabIndex = 6
-        Me.CreateJson.Text = "Create JSON"
-        Me.CreateJson.UseVisualStyleBackColor = True
-        '
-        'TextBox2
-        '
-        Me.TextBox2.Location = New System.Drawing.Point(76, 128)
-        Me.TextBox2.Name = "TextBox2"
-        Me.TextBox2.Size = New System.Drawing.Size(50, 20)
-        Me.TextBox2.TabIndex = 5
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(12, 129)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(60, 16)
-        Me.Label2.TabIndex = 4
-        Me.Label2.Text = "projectId"
+        Me.TextBox1.Size = New System.Drawing.Size(491, 38)
+        Me.TextBox1.TabIndex = 11
+        Me.TextBox1.Text = "Click a project from the alphabetical list below to generate a corresponding json" &
+    " file on G:\Shared drives\GA&RA GA Team\WX_Work in Progress\JSONs"
         '
         'FormP2J
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(578, 450)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.TextBox2)
-        Me.Controls.Add(Me.CreateJson)
+        Me.ClientSize = New System.Drawing.Size(516, 450)
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.myStatus)
         Me.Controls.Add(Me.Quit)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.ListBoxProjects)
         Me.Name = "FormP2J"
         Me.Text = "P2J - Project to Json"
@@ -135,11 +108,9 @@ Partial Class FormP2J
 
     End Sub
     Friend WithEvents ListBoxProjects As ListBox
-    Friend WithEvents Label1 As Label
+    Friend WithEvents Label5 As Label
     Friend WithEvents Quit As Button
+    Friend WithEvents MyTimer As Timer
     Friend WithEvents myStatus As Label
     Friend WithEvents TextBox1 As TextBox
-    Friend WithEvents CreateJson As Button
-    Friend WithEvents TextBox2 As TextBox
-    Friend WithEvents Label2 As Label
 End Class
