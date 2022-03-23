@@ -105,7 +105,6 @@ Public Class FormP2J
                                 myDataRow.Item("P_Sort") = 5
                             Case "Opinion"
                                 myDataRow.Item("P_Sort") = 6
-                                ' This does nto work. Still getting "There is no position at position 0"
                                 If myDataRow.Item("P_Grade") Is Nothing Then
                                     myDataRow.Item("P_Grade") = "Not yet set."
                                 End If

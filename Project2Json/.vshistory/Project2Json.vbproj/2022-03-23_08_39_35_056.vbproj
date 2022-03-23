@@ -17,9 +17,9 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <PublishUrl>C:\Users\bunny\Desktop\Project2Json\</PublishUrl>
+    <PublishUrl>C:\Users\bunny\Desktop\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Unc</InstallFrom>
+    <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Background</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
@@ -27,7 +27,6 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>\\RBAMS500\DEPT_CA\_Project\DataAnalytics\Project2Json\</InstallUrl>
     <UpdateUrl>\\RBAMS500\DEPT_CA\_Project\DataAnalytics\Project2Json\</UpdateUrl>
     <TargetCulture>en-US</TargetCulture>
     <ProductName>Project2Json</ProductName>
@@ -35,8 +34,8 @@
     <SuiteName>GAS Tools</SuiteName>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>3</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -92,7 +91,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>9922B75F58D0D999AF1BD0CA141E2535F9164854</ManifestCertificateThumbprint>
@@ -228,7 +227,7 @@
       <TargetPath>
       </TargetPath>
       <PublishState>Include</PublishState>
-      <IncludeHash>False</IncludeHash>
+      <IncludeHash>True</IncludeHash>
       <FileType>File</FileType>
     </PublishFile>
     <PublishFile Include="Microsoft.Bcl.AsyncInterfaces">
@@ -240,36 +239,6 @@
       <PublishState>Exclude</PublishState>
       <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
-    </PublishFile>
-    <PublishFile Include="Project2Json.exe">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Auto</PublishState>
-      <IncludeHash>False</IncludeHash>
-      <FileType>ManifestEntryPoint</FileType>
-    </PublishFile>
-    <PublishFile Include="Project2Json.exe.config">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Auto</PublishState>
-      <IncludeHash>False</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Project2Json.exe.manifest">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Auto</PublishState>
-      <IncludeHash>False</IncludeHash>
-      <FileType>ManifestEntryPoint</FileType>
     </PublishFile>
     <PublishFile Include="System.Buffers">
       <Visible>False</Visible>
