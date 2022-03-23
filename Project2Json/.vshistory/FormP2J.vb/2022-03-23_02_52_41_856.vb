@@ -158,7 +158,7 @@ Public Class FormP2J
                                 myText = Replace(myText, Chr(7), "")             ' Bell
                                 myText = Replace(myText, Chr(8), "")             ' Backspace
                                 myText = Replace(myText, Chr(34), "\" & Chr(34)) ' Quote
-                                myText = Replace(myText, Chr(47), "\/")          ' Slash
+                                myText = Replace(myText, Chr(47), "/")           ' Slash
                                 ' Encode any remaining control characters 0-31
                                 For j As Integer = 0 To 9
                                     myText = Replace(myText, Chr(i), "\000" & i)

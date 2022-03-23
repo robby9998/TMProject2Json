@@ -2,6 +2,7 @@
 Imports System.Data.SqlClient               ' SQL handling
 Imports System.Text.RegularExpressions      ' Regular Expressions
 
+
 ' General Comments
 ' ================
 ' Determine which .Net Framework versions are on the machine
@@ -18,14 +19,10 @@ Public Class FormP2J
     Private Sub FormP2J_Load()
         myRED = Color.FromArgb(255, 50, 50)
         myGreen = Color.FromArgb(50, 255, 50)
+        myStatus.Text = "Status: Loading Form ..."
+        myStatus.ForeColor = myGreen
     End Sub
 
-    Private Sub FormP2J_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
-        ' Set Focus to entry field
-        myProjectID.Select()
-    End Sub
-
-    ' Currently not used
     Public Function EncodeBase64(input As String) As String
         Return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input))
     End Function
@@ -47,16 +44,11 @@ Public Class FormP2J
         Dim myCount As Integer
         Dim myImgCount As Integer
 
-        Try
-            myP_ID = CStr(Math.Abs(CInt(myProjectID.Text)))
-            If CInt(myP_ID) = 0 Then
-                ShowError("Status: This does not seem to be a valid projectID", "red")
-                Exit Sub
-            End If
-        Catch ex As Exception
-            ShowError("Status: Not a valid projectID", "red")
+        myP_ID = CStr(Math.Abs(CInt(myProjectID.Text)))
+        If CInt(myP_ID) = 0 Then
+            ShowError("This does not seem to be a valid projectID", "red")
             Exit Sub
-        End Try
+        End If
 
         ' Make visible what was determined to be the projectId
         myProjectID.Text = myP_ID
@@ -149,23 +141,10 @@ Public Class FormP2J
                             If Not IsDBNull(myDataRow.Item(i)) Then
                                 myText = myDataRow.Item(i).ToString
                                 ' remove linebreaks & tabs from any field
-                                myText = Replace(myText, Chr(92), "\\")          ' Backslash
-                                myText = Replace(myText, Chr(13), "")            ' CR Carriage Return
-                                myText = Replace(myText, Chr(10), "")            ' LF Line Feed
-                                myText = Replace(myText, Chr(12), "")            ' FF Form Feed
-                                myText = Replace(myText, Chr(9), "")             ' Horizontal Tab
-                                myText = Replace(myText, Chr(11), "")            ' Vertical Tab
-                                myText = Replace(myText, Chr(7), "")             ' Bell
-                                myText = Replace(myText, Chr(8), "")             ' Backspace
-                                myText = Replace(myText, Chr(34), "\" & Chr(34)) ' Quote
-                                myText = Replace(myText, Chr(47), "\/")          ' Slash
-                                ' Encode any remaining control characters 0-31
-                                For j As Integer = 0 To 9
-                                    myText = Replace(myText, Chr(i), "\000" & i)
-                                Next j
-                                For j As Integer = 10 To 31
-                                    myText = Replace(myText, Chr(i), "\00" & i)
-                                Next j
+                                myText = Replace(myText, Chr(13), "") ' CR
+                                myText = Replace(myText, Chr(10), "") ' LF
+                                myText = Replace(myText, Chr(9), "")  ' Horizontal Tab
+                                myText = Replace(myText, Chr(11), "") ' Vertical Tab
                                 If Len(myText) > 6 Then
                                     If myText.Substring(0, 6) = "<html>" Then
                                         ' Find now the pictures
@@ -196,18 +175,18 @@ Public Class FormP2J
                             ' with/without delimiter
                             If myRow = "" Then
                                 If myText <> "" Then
-                                    myRow = Chr(34) & myFieldName & Chr(34) & ":" & Chr(34) & myText & Chr(34)
+                                    myRow = Chr(34) & myFieldName & Chr(34) & ":" & Chr(34) & EncodeBase64(myText) & Chr(34)
                                 Else
                                     myRow = Chr(34) & myFieldName & Chr(34) & ":" & Chr(34) & Chr(34)
                                 End If
                             Else
                                 If myText <> "" Then
-                                    myRow = myRow & "," & Chr(34) & myFieldName & Chr(34) & ":" & Chr(34) & myText & Chr(34)
+                                    myRow = myRow & "," & Chr(34) & myFieldName & Chr(34) & ":" & Chr(34) & EncodeBase64(myText) & Chr(34)
                                 Else
                                     myRow = myRow & "," & Chr(34) & myFieldName & Chr(34) & ":" & Chr(34) & Chr(34)
                                 End If
                             End If
-                        Next i
+                        Next
                         myRows(myRowsCount) = myRow
                         myRowsCount += 1
                     Next
@@ -245,4 +224,5 @@ Public Class FormP2J
             myStatus.ForeColor = myGreen
         End If
     End Sub
+
 End Class

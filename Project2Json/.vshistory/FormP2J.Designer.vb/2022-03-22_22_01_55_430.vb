@@ -22,14 +22,25 @@ Partial Class FormP2J
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.ListBoxProjects = New System.Windows.Forms.ListBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Quit = New System.Windows.Forms.Button()
         Me.myStatus = New System.Windows.Forms.Label()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.CreateJson = New System.Windows.Forms.Button()
-        Me.myProjectID = New System.Windows.Forms.TextBox()
+        Me.TextBox2 = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
+        '
+        'ListBoxProjects
+        '
+        Me.ListBoxProjects.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.ListBoxProjects.FormattingEnabled = True
+        Me.ListBoxProjects.ItemHeight = 18
+        Me.ListBoxProjects.Location = New System.Drawing.Point(15, 281)
+        Me.ListBoxProjects.Name = "ListBoxProjects"
+        Me.ListBoxProjects.Size = New System.Drawing.Size(492, 130)
+        Me.ListBoxProjects.TabIndex = 3
         '
         'Label1
         '
@@ -46,10 +57,10 @@ Partial Class FormP2J
         '
         Me.Quit.BackColor = System.Drawing.SystemColors.Info
         Me.Quit.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Quit.Location = New System.Drawing.Point(484, 8)
+        Me.Quit.Location = New System.Drawing.Point(425, 417)
         Me.Quit.Name = "Quit"
         Me.Quit.Size = New System.Drawing.Size(82, 29)
-        Me.Quit.TabIndex = 7
+        Me.Quit.TabIndex = 8
         Me.Quit.Text = "Quit"
         Me.Quit.UseVisualStyleBackColor = False
         '
@@ -59,9 +70,9 @@ Partial Class FormP2J
         Me.myStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.myStatus.Location = New System.Drawing.Point(11, 15)
         Me.myStatus.Name = "myStatus"
-        Me.myStatus.Size = New System.Drawing.Size(145, 15)
+        Me.myStatus.Size = New System.Drawing.Size(138, 15)
         Me.myStatus.TabIndex = 1
-        Me.myStatus.Text = "Status: Just started ..."
+        Me.myStatus.Text = "Status: Initialising ..."
         '
         'TextBox1
         '
@@ -87,14 +98,12 @@ Partial Class FormP2J
         Me.CreateJson.Text = "Create JSON"
         Me.CreateJson.UseVisualStyleBackColor = True
         '
-        'myProjectID
+        'TextBox2
         '
-        Me.myProjectID.Location = New System.Drawing.Point(76, 128)
-        Me.myProjectID.MaxLength = 5
-        Me.myProjectID.Name = "myProjectID"
-        Me.myProjectID.Size = New System.Drawing.Size(50, 20)
-        Me.myProjectID.TabIndex = 5
-        Me.myProjectID.WordWrap = False
+        Me.TextBox2.Location = New System.Drawing.Point(76, 128)
+        Me.TextBox2.Name = "TextBox2"
+        Me.TextBox2.Size = New System.Drawing.Size(50, 20)
+        Me.TextBox2.TabIndex = 5
         '
         'Label2
         '
@@ -110,25 +119,27 @@ Partial Class FormP2J
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(578, 156)
+        Me.ClientSize = New System.Drawing.Size(578, 450)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.myProjectID)
+        Me.Controls.Add(Me.TextBox2)
         Me.Controls.Add(Me.CreateJson)
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.myStatus)
         Me.Controls.Add(Me.Quit)
         Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.ListBoxProjects)
         Me.Name = "FormP2J"
         Me.Text = "P2J - Project to Json"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
+    Friend WithEvents ListBoxProjects As ListBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Quit As Button
     Friend WithEvents myStatus As Label
     Friend WithEvents TextBox1 As TextBox
     Friend WithEvents CreateJson As Button
-    Friend WithEvents myProjectID As TextBox
+    Friend WithEvents TextBox2 As TextBox
     Friend WithEvents Label2 As Label
 End Class

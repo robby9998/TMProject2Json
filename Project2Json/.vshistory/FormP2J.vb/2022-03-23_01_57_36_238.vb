@@ -1,6 +1,7 @@
 ﻿Option Explicit On                          ' Declare everything
 Imports System.Data.SqlClient               ' SQL handling
 Imports System.Text.RegularExpressions      ' Regular Expressions
+Imports System.Web.Helpers
 
 ' General Comments
 ' ================
@@ -25,9 +26,25 @@ Public Class FormP2J
         myProjectID.Select()
     End Sub
 
-    ' Currently not used
     Public Function EncodeBase64(input As String) As String
         Return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(input))
+    End Function
+
+    Public Function MaskForJSON(input As String) As String
+        'input = input.Replace("", "\n")
+        input = Regex.Replace(input, "\t", "\\t")
+        input = Regex.Replace(input, "\n", "\\n")
+        input = input.Replace(/\\ n / g, "\\n")
+        .Replace(/\\'/g, "\\'")
+        .Replace(/\\ "/g, '\\"')
+        .Replace(/\\&/ g, "\\&")
+        .Replace(/\\ r / g, "\\r")
+        .Replace(/\\ t / g, "\\t")
+        .Replace(/\\ b / g, "\\b")
+        .Replace(/\\ f / g, "\\f");
+        System.Web.
+
+        Return input
     End Function
 
     Private Sub Quit_Click(sender As Object, e As EventArgs) Handles Quit.Click
@@ -149,23 +166,10 @@ Public Class FormP2J
                             If Not IsDBNull(myDataRow.Item(i)) Then
                                 myText = myDataRow.Item(i).ToString
                                 ' remove linebreaks & tabs from any field
-                                myText = Replace(myText, Chr(92), "\\")          ' Backslash
-                                myText = Replace(myText, Chr(13), "")            ' CR Carriage Return
-                                myText = Replace(myText, Chr(10), "")            ' LF Line Feed
-                                myText = Replace(myText, Chr(12), "")            ' FF Form Feed
-                                myText = Replace(myText, Chr(9), "")             ' Horizontal Tab
-                                myText = Replace(myText, Chr(11), "")            ' Vertical Tab
-                                myText = Replace(myText, Chr(7), "")             ' Bell
-                                myText = Replace(myText, Chr(8), "")             ' Backspace
-                                myText = Replace(myText, Chr(34), "\" & Chr(34)) ' Quote
-                                myText = Replace(myText, Chr(47), "\/")          ' Slash
-                                ' Encode any remaining control characters 0-31
-                                For j As Integer = 0 To 9
-                                    myText = Replace(myText, Chr(i), "\000" & i)
-                                Next j
-                                For j As Integer = 10 To 31
-                                    myText = Replace(myText, Chr(i), "\00" & i)
-                                Next j
+                                myText = Replace(myText, Chr(13), "") ' CR
+                                myText = Replace(myText, Chr(10), "") ' LF
+                                myText = Replace(myText, Chr(9), "")  ' Horizontal Tab
+                                myText = Replace(myText, Chr(11), "") ' Vertical Tab
                                 If Len(myText) > 6 Then
                                     If myText.Substring(0, 6) = "<html>" Then
                                         ' Find now the pictures
@@ -196,18 +200,18 @@ Public Class FormP2J
                             ' with/without delimiter
                             If myRow = "" Then
                                 If myText <> "" Then
-                                    myRow = Chr(34) & myFieldName & Chr(34) & ":" & Chr(34) & myText & Chr(34)
+                                    myRow = Chr(34) & myFieldName & Chr(34) & ":" & Chr(34) & MaskForJSON(myText) & Chr(34)
                                 Else
                                     myRow = Chr(34) & myFieldName & Chr(34) & ":" & Chr(34) & Chr(34)
                                 End If
                             Else
                                 If myText <> "" Then
-                                    myRow = myRow & "," & Chr(34) & myFieldName & Chr(34) & ":" & Chr(34) & myText & Chr(34)
+                                    myRow = myRow & "," & Chr(34) & myFieldName & Chr(34) & ":" & Chr(34) & MaskForJSON(myText) & Chr(34)
                                 Else
                                     myRow = myRow & "," & Chr(34) & myFieldName & Chr(34) & ":" & Chr(34) & Chr(34)
                                 End If
                             End If
-                        Next i
+                        Next
                         myRows(myRowsCount) = myRow
                         myRowsCount += 1
                     Next

@@ -59,9 +59,9 @@ Partial Class FormP2J
         Me.myStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.myStatus.Location = New System.Drawing.Point(11, 15)
         Me.myStatus.Name = "myStatus"
-        Me.myStatus.Size = New System.Drawing.Size(145, 15)
+        Me.myStatus.Size = New System.Drawing.Size(138, 15)
         Me.myStatus.TabIndex = 1
-        Me.myStatus.Text = "Status: Just started ..."
+        Me.myStatus.Text = "Status: Initialising ..."
         '
         'TextBox1
         '

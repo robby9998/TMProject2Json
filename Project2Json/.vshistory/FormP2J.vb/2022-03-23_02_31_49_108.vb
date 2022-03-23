@@ -1,6 +1,7 @@
 ﻿Option Explicit On                          ' Declare everything
 Imports System.Data.SqlClient               ' SQL handling
 Imports System.Text.RegularExpressions      ' Regular Expressions
+Imports System.Web.Helpers
 
 ' General Comments
 ' ================
@@ -149,7 +150,6 @@ Public Class FormP2J
                             If Not IsDBNull(myDataRow.Item(i)) Then
                                 myText = myDataRow.Item(i).ToString
                                 ' remove linebreaks & tabs from any field
-                                myText = Replace(myText, Chr(92), "\\")          ' Backslash
                                 myText = Replace(myText, Chr(13), "")            ' CR Carriage Return
                                 myText = Replace(myText, Chr(10), "")            ' LF Line Feed
                                 myText = Replace(myText, Chr(12), "")            ' FF Form Feed
@@ -158,7 +158,8 @@ Public Class FormP2J
                                 myText = Replace(myText, Chr(7), "")             ' Bell
                                 myText = Replace(myText, Chr(8), "")             ' Backspace
                                 myText = Replace(myText, Chr(34), "\" & Chr(34)) ' Quote
-                                myText = Replace(myText, Chr(47), "\/")          ' Slash
+                                myText = Replace(myText, Chr(92), "\\")          ' Backslash
+                                myText = Replace(myText, Chr(47), "/")           ' Slash
                                 ' Encode any remaining control characters 0-31
                                 For j As Integer = 0 To 9
                                     myText = Replace(myText, Chr(i), "\000" & i)
