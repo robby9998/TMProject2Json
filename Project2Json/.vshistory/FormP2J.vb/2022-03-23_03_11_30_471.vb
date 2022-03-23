@@ -179,7 +179,7 @@ Public Class FormP2J
                                         Next
 
                                         ' Clean html (remove some tags, remove attributes from some other tags), replace soft linebreaks in paragraphs
-                                        myText = Regex.Replace(myText, "(<(span|html|grammarly|div|teammatelink|\\/span|\\/html|\\/div).*?>)|((<)(body|tr|td|table|p|strong|em|li)\s(.*?)(>))", "$4$5$7")
+                                        myText = Regex.Replace(myText, "(<(span|html|grammarly|div|teammatelink|/span|/html|/div).*?>)|((<)(body|tr|td|table|p|strong|em|li)\s(.*?)(>))", "$4$5$7")
                                         ' ATTENTION: This broke the validity of html:
                                         ' a) when there is "<p>text as sjkd  <strong> hsjdshdj <br /> skjdh sh sjks j </strong> dsjhdk</p> " => this is ok and valid
                                         ' b) this becomes  "<p>text as sjkd  <strong> hsjdshdj </p><p> skjdh sh sjks j </strong> sasa</p>" => this is invalid because <strong> is closed with </p>
