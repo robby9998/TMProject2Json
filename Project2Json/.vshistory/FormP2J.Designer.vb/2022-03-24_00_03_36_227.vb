@@ -50,7 +50,7 @@ Partial Class FormP2J
         '
         Me.Quit.BackColor = System.Drawing.SystemColors.Info
         Me.Quit.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Quit.Location = New System.Drawing.Point(12, 280)
+        Me.Quit.Location = New System.Drawing.Point(590, 8)
         Me.Quit.Name = "Quit"
         Me.Quit.Size = New System.Drawing.Size(82, 29)
         Me.Quit.TabIndex = 7
@@ -75,33 +75,33 @@ Partial Class FormP2J
         Me.TextBox1.Location = New System.Drawing.Point(12, 64)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(629, 171)
+        Me.TextBox1.Size = New System.Drawing.Size(540, 108)
         Me.TextBox1.TabIndex = 3
         Me.TextBox1.Text = resources.GetString("TextBox1.Text")
         '
         'CreateJson
         '
         Me.CreateJson.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CreateJson.Location = New System.Drawing.Point(177, 241)
+        Me.CreateJson.Location = New System.Drawing.Point(177, 178)
         Me.CreateJson.Name = "CreateJson"
-        Me.CreateJson.Size = New System.Drawing.Size(230, 24)
+        Me.CreateJson.Size = New System.Drawing.Size(105, 24)
         Me.CreateJson.TabIndex = 6
-        Me.CreateJson.Text = "Create JSON and start converter"
+        Me.CreateJson.Text = "Create JSON"
         Me.CreateJson.UseVisualStyleBackColor = True
         '
         'Label2
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(12, 244)
+        Me.Label2.Location = New System.Drawing.Point(12, 182)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(63, 16)
+        Me.Label2.Size = New System.Drawing.Size(60, 16)
         Me.Label2.TabIndex = 4
-        Me.Label2.Text = "projectId:"
+        Me.Label2.Text = "projectId"
         '
         'myProjectID
         '
-        Me.myProjectID.Location = New System.Drawing.Point(78, 243)
+        Me.myProjectID.Location = New System.Drawing.Point(78, 182)
         Me.myProjectID.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
         Me.myProjectID.Name = "myProjectID"
         Me.myProjectID.Size = New System.Drawing.Size(78, 20)
@@ -120,7 +120,7 @@ Partial Class FormP2J
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(653, 323)
+        Me.ClientSize = New System.Drawing.Size(679, 206)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.myProjectID)
         Me.Controls.Add(Me.Label2)

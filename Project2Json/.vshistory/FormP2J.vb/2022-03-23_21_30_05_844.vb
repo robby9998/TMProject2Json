@@ -23,7 +23,7 @@ Public Class FormP2J
     Private Sub FormP2J_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         ' Set Focus to entry field
         myProjectID.Select()
-        ShowError("Status: Enter a Project ID", "green")
+        ShowError("Status: Enter Project ID", "green")
     End Sub
 
     ' Currently not used
@@ -37,7 +37,7 @@ Public Class FormP2J
 
     Private Sub CreateJson_Click(sender As Object, e As EventArgs) Handles CreateJson.Click
         Dim mySql As String
-        Dim myP_ID As Integer
+        Dim myP_ID As String
         Dim myP_Title As String
         Dim myText As String
         Dim myFieldName As String
@@ -48,7 +48,19 @@ Public Class FormP2J
         Dim myCount As Integer
         Dim myImgCount As Integer
 
-        myP_ID = CInt(myProjectID.Value)   ' This should be a valid integer number (0-10000) (actually Decimal > Integer)
+        Try
+            myP_ID = CStr(Math.Abs(CInt(myProjectID.Text)))
+            If CInt(myP_ID) = 0 Then
+                ShowError("Status: This does not seem to be a valid projectID", "red")
+                Exit Sub
+            End If
+        Catch ex As Exception
+            ShowError("Status: Not a valid projectID", "red")
+            Exit Sub
+        End Try
+
+        ' Make visible what was determined to be the projectId
+        myProjectID.Text = myP_ID
 
         ' Select the target folder for json now
         ' RS: #TODO: Potentially need to check for exceptions
@@ -69,7 +81,7 @@ Public Class FormP2J
                     ' Sort the list by Sequence, P_Sort, F_Number, A_Number  (as there is only one project, no sort by project ID is needed)
 
                     ' Get Project Info
-                    mySql = "SELECT 1 AS X_Sequence, dbo.NG_Project.ID AS P_ID, dbo.NG_Project.Title AS P_Title, dbo.NG_Project.Code AS P_Code, ISNULL(dbo.TM_CategoryValue.Name,'not defined in GAS') AS P_Grade, dbo.NG_Procedure.Title AS P_Part, dbo.NG_Procedure.Text1 AS P_Part_Text, 'X' AS P_Sort, '-' AS S_Title, '-' AS F_Number, '-' AS F_Title, '-' AS F_Rating, '-' AS F_Text, '-' AS A_Number, '-' AS A_Text, '-' AS A_Responsible, '-' AS A_DueDate "
+                    mySql = "SELECT 1 AS X_Sequence, dbo.NG_Project.ID AS P_ID, dbo.NG_Project.Title AS P_Title, dbo.NG_Project.Code AS P_Code, dbo.TM_CategoryValue.Name AS P_Grade, dbo.NG_Procedure.Title AS P_Part, dbo.NG_Procedure.Text1 AS P_Part_Text, 'X' AS P_Sort, '-' AS S_Title, '-' AS F_Number, '-' AS F_Title, '-' AS F_Rating, '-' AS F_Text, '-' AS A_Number, '-' AS A_Text, '-' AS A_Responsible, '-' AS A_DueDate "
                     mySql &= "FROM ((dbo.NG_Project INNER JOIN dbo.NG_ContextualAssociation ON dbo.NG_Project.ID = dbo.NG_ContextualAssociation.ContextObjectID) INNER JOIN dbo.TM_CategoryValue ON dbo.NG_Project.Category6CID = dbo.TM_CategoryValue.CategoryID) INNER JOIN dbo.NG_Procedure ON dbo.NG_ContextualAssociation.TargetObjectID = dbo.NG_Procedure.ID "
                     mySql &= "WHERE (((dbo.NG_Project.ID)=" & myP_ID & ") AND ((dbo.NG_Procedure.Title)='Team (incl. Audit Director)' Or (dbo.NG_Procedure.Title)='Distribution List' Or (dbo.NG_Procedure.Title)='Objective & Scope' Or (dbo.NG_Procedure.Title)='Main Findings / Summary' Or (dbo.NG_Procedure.Title)='Opinion' Or (dbo.NG_Procedure.Title)='Organisational Background' Or (dbo.NG_Procedure.Title)='Report Title') AND ((dbo.NG_ContextualAssociation.ContextObjectTypeLID)=81) AND ((dbo.NG_ContextualAssociation.TargetObjectTypeLID)=48));"
                     Using mySQLDataAdapter As New SqlDataAdapter(mySql, mySqlConnection)
@@ -94,6 +106,10 @@ Public Class FormP2J
                                 myDataRow.Item("P_Sort") = 5
                             Case "Opinion"
                                 myDataRow.Item("P_Sort") = 6
+                                ' This does nto work. Still getting "There is no position at position 0"
+                                If myDataRow.Item("P_Grade") Is Nothing Then
+                                    myDataRow.Item("P_Grade") = "Not yet set."
+                                End If
                             Case "Organisational Background"
                                 myDataRow.Item("P_Sort") = 7
                             Case "Report Title"
@@ -101,10 +117,9 @@ Public Class FormP2J
                         End Select
                     Next
                     myP_Title = myDataTable.Rows(0).Item("P_Title").ToString()
-                    myP_Title = Regex.Replace(myP_Title, "\.|:|\\|\/|<|>|\||\?|\*|""", "_")      ' Make sure title can be used on filesystem, replace invalid characters
-                    myP_Title = Regex.Replace(myP_Title, " |\+|\(|\)", "_")                      ' Further replace items which do not work well in URL                    
+                    myP_Title = Regex.Replace(myP_Title, "\.|:|\\|\/|<|>|\||\?|\*|""", "_")      ' Make sure title can be used on filesystem, remove invalid characters
 
-                    ' Get Scope Areas, i.e. Folders marked "For Report"
+                    ' Get Scope Areas
                     mySql = "Select 2 As X_Sequence, dbo.NG_Project.ID As P_ID, dbo.NG_Project.Title As P_Title, '-' As P_Code, '-' As P_Grade, '-' As P_Part, '-' As P_Part_Text, '-' As P_Sort, dbo.NG_Folder.Title As S_Title, '-' As F_Number, '-' As F_Title, '-' As F_Rating, '-' As F_Text, '-' As A_Number, '-' As A_Text, '-' As A_Responsible, '-' As A_DueDate "
                     mySql &= "From dbo.NG_Project INNER Join (dbo.NG_ContextualAssociation As NG_ContextualAssociation_2 INNER Join dbo.NG_Folder On NG_ContextualAssociation_2.SourceObjectID = dbo.NG_Folder.ID) ON dbo.NG_Project.ID = NG_ContextualAssociation_2.ContextObjectID "
                     mySql &= "Where (((NG_ContextualAssociation_2.SourceObjectTypeLID) = 166) And ((NG_ContextualAssociation_2.ContextObjectTypeLID) = 81) And ((dbo.NG_Folder.YesNo2) = 1)) "
@@ -138,8 +153,8 @@ Public Class FormP2J
 
                             If Not IsDBNull(myDataRow.Item(i)) Then
                                 myText = myDataRow.Item(i).ToString
-                                ' remove linebreaks & tabs from any field, escape special characters
-                                myText = Replace(myText, Chr(92), "\\")          ' Backslash, attention this needs to be done first, before other \s are introduced
+                                ' remove linebreaks & tabs from any field
+                                myText = Replace(myText, Chr(92), "\\")          ' Backslash
                                 myText = Replace(myText, Chr(13), "")            ' CR Carriage Return
                                 myText = Replace(myText, Chr(10), "")            ' LF Line Feed
                                 myText = Replace(myText, Chr(12), "")            ' FF Form Feed
@@ -149,7 +164,7 @@ Public Class FormP2J
                                 myText = Replace(myText, Chr(8), "")             ' Backspace
                                 myText = Replace(myText, Chr(34), "\" & Chr(34)) ' Quote
                                 myText = Replace(myText, Chr(47), "\/")          ' Slash
-                                ' encode any remaining control characters 0-31
+                                ' Encode any remaining control characters 0-31
                                 For j As Integer = 0 To 9
                                     myText = Replace(myText, Chr(i), "\000" & i)
                                 Next j
@@ -164,11 +179,11 @@ Public Class FormP2J
                                             ' Problem with regEx: the pattern contains special characters, which results in parsing exception
                                             ' Dim myRegExp As New Regex(myMatch.Value)
                                             ' myText = myRegExp.Replace(myText, "#img" & myImgCount & "#", 1)
-                                            myText = Replace(myText, myMatch.Value, "#img" & myImgCount & "#",, 1)     ' Magic lies in the ,1 which tells to replace only 1 time
+                                            myText = Replace(myText, myMatch.Value, "#img" & myImgCount & "#",, 1)
                                             myImgCount += 1
                                         Next
 
-                                        ' Clean html (remove some tags, remove attributes from some other tags), DO NOT replace soft linebreaks in paragraphs (other wise destroys validity of html)
+                                        ' Clean html (remove some tags, remove attributes from some other tags), replace soft linebreaks in paragraphs
                                         myText = Regex.Replace(myText, "(<(span|html|grammarly|div|teammatelink|\\/span|\\/html|\\/div).*?>)|((<)(body|tr|td|table|p|strong|em|li)\s(.*?)(>))", "$4$5$7")
                                         ' ATTENTION: This broke the validity of html:
                                         ' a) when there is "<p>text as sjkd  <strong> hsjdshdj <br /> skjdh sh sjks j </strong> dsjhdk</p> " => this is ok and valid
@@ -218,7 +233,8 @@ Public Class FormP2J
                 Next i
                 myFile.WriteLine("]}")
             End Using
-            ShowError("Status: File generated: " & myFileName, "green")
+            myStatus.Text = "Status: File generated: " & myFileName
+            myStatus.ForeColor = myGreen
             Process.Start("https://script.google.com/a/macros/roche.com/s/AKfycbw1UesP3Xr6y4axkCmzIjCVZhLwVBXldCD1jk6zMp85/dev?file=" & Net.WebUtility.UrlEncode(myFileName))
 
         Catch ex As Exception
@@ -234,5 +250,4 @@ Public Class FormP2J
             myStatus.ForeColor = myGreen
         End If
     End Sub
-
 End Class

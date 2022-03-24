@@ -48,7 +48,7 @@ Public Class FormP2J
         Dim myCount As Integer
         Dim myImgCount As Integer
 
-        myP_ID = CInt(myProjectID.Value)   ' This should be a valid integer number (0-10000) (actually Decimal > Integer)
+        myP_ID = myProjectID.Value   ' This should be a valid integer number (0-10000)
 
         ' Select the target folder for json now
         ' RS: #TODO: Potentially need to check for exceptions
@@ -101,8 +101,7 @@ Public Class FormP2J
                         End Select
                     Next
                     myP_Title = myDataTable.Rows(0).Item("P_Title").ToString()
-                    myP_Title = Regex.Replace(myP_Title, "\.|:|\\|\/|<|>|\||\?|\*|""", "_")      ' Make sure title can be used on filesystem, replace invalid characters
-                    myP_Title = Regex.Replace(myP_Title, " |\+|\(|\)", "_")                      ' Further replace items which do not work well in URL                    
+                    myP_Title = Regex.Replace(myP_Title, "\.|:|\\|\/|<|>|\||\?|\*|""", "_")      ' Make sure title can be used on filesystem, remove invalid characters
 
                     ' Get Scope Areas, i.e. Folders marked "For Report"
                     mySql = "Select 2 As X_Sequence, dbo.NG_Project.ID As P_ID, dbo.NG_Project.Title As P_Title, '-' As P_Code, '-' As P_Grade, '-' As P_Part, '-' As P_Part_Text, '-' As P_Sort, dbo.NG_Folder.Title As S_Title, '-' As F_Number, '-' As F_Title, '-' As F_Rating, '-' As F_Text, '-' As A_Number, '-' As A_Text, '-' As A_Responsible, '-' As A_DueDate "
@@ -138,8 +137,8 @@ Public Class FormP2J
 
                             If Not IsDBNull(myDataRow.Item(i)) Then
                                 myText = myDataRow.Item(i).ToString
-                                ' remove linebreaks & tabs from any field, escape special characters
-                                myText = Replace(myText, Chr(92), "\\")          ' Backslash, attention this needs to be done first, before other \s are introduced
+                                ' remove linebreaks & tabs from any field
+                                myText = Replace(myText, Chr(92), "\\")          ' Backslash
                                 myText = Replace(myText, Chr(13), "")            ' CR Carriage Return
                                 myText = Replace(myText, Chr(10), "")            ' LF Line Feed
                                 myText = Replace(myText, Chr(12), "")            ' FF Form Feed
@@ -149,7 +148,7 @@ Public Class FormP2J
                                 myText = Replace(myText, Chr(8), "")             ' Backspace
                                 myText = Replace(myText, Chr(34), "\" & Chr(34)) ' Quote
                                 myText = Replace(myText, Chr(47), "\/")          ' Slash
-                                ' encode any remaining control characters 0-31
+                                ' Encode any remaining control characters 0-31
                                 For j As Integer = 0 To 9
                                     myText = Replace(myText, Chr(i), "\000" & i)
                                 Next j
@@ -164,11 +163,11 @@ Public Class FormP2J
                                             ' Problem with regEx: the pattern contains special characters, which results in parsing exception
                                             ' Dim myRegExp As New Regex(myMatch.Value)
                                             ' myText = myRegExp.Replace(myText, "#img" & myImgCount & "#", 1)
-                                            myText = Replace(myText, myMatch.Value, "#img" & myImgCount & "#",, 1)     ' Magic lies in the ,1 which tells to replace only 1 time
+                                            myText = Replace(myText, myMatch.Value, "#img" & myImgCount & "#",, 1)
                                             myImgCount += 1
                                         Next
 
-                                        ' Clean html (remove some tags, remove attributes from some other tags), DO NOT replace soft linebreaks in paragraphs (other wise destroys validity of html)
+                                        ' Clean html (remove some tags, remove attributes from some other tags), replace soft linebreaks in paragraphs
                                         myText = Regex.Replace(myText, "(<(span|html|grammarly|div|teammatelink|\\/span|\\/html|\\/div).*?>)|((<)(body|tr|td|table|p|strong|em|li)\s(.*?)(>))", "$4$5$7")
                                         ' ATTENTION: This broke the validity of html:
                                         ' a) when there is "<p>text as sjkd  <strong> hsjdshdj <br /> skjdh sh sjks j </strong> dsjhdk</p> " => this is ok and valid
@@ -218,7 +217,8 @@ Public Class FormP2J
                 Next i
                 myFile.WriteLine("]}")
             End Using
-            ShowError("Status: File generated: " & myFileName, "green")
+            myStatus.Text = "Status: File generated: " & myFileName
+            myStatus.ForeColor = myGreen
             Process.Start("https://script.google.com/a/macros/roche.com/s/AKfycbw1UesP3Xr6y4axkCmzIjCVZhLwVBXldCD1jk6zMp85/dev?file=" & Net.WebUtility.UrlEncode(myFileName))
 
         Catch ex As Exception

@@ -22,17 +22,13 @@ Partial Class FormP2J
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormP2J))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Quit = New System.Windows.Forms.Button()
         Me.myStatus = New System.Windows.Forms.Label()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.CreateJson = New System.Windows.Forms.Button()
+        Me.myProjectID = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.myProjectID = New System.Windows.Forms.NumericUpDown()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        CType(Me.myProjectID, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label1
@@ -50,7 +46,7 @@ Partial Class FormP2J
         '
         Me.Quit.BackColor = System.Drawing.SystemColors.Info
         Me.Quit.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Quit.Location = New System.Drawing.Point(12, 280)
+        Me.Quit.Location = New System.Drawing.Point(484, 8)
         Me.Quit.Name = "Quit"
         Me.Quit.Size = New System.Drawing.Size(82, 29)
         Me.Quit.TabIndex = 7
@@ -75,55 +71,48 @@ Partial Class FormP2J
         Me.TextBox1.Location = New System.Drawing.Point(12, 64)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
-        Me.TextBox1.Size = New System.Drawing.Size(629, 171)
+        Me.TextBox1.Size = New System.Drawing.Size(564, 58)
         Me.TextBox1.TabIndex = 3
-        Me.TextBox1.Text = resources.GetString("TextBox1.Text")
+        Me.TextBox1.Text = "Pick the projectId from the URL" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Example: https://gas.roche.com/TeamMate/Project#" &
+    "!/Project?projectId=50&assessmentId=14" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "Enter it (in this case 50) in the field " &
+    "below and click the button."
         '
         'CreateJson
         '
         Me.CreateJson.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CreateJson.Location = New System.Drawing.Point(177, 241)
+        Me.CreateJson.Location = New System.Drawing.Point(144, 125)
         Me.CreateJson.Name = "CreateJson"
-        Me.CreateJson.Size = New System.Drawing.Size(230, 24)
+        Me.CreateJson.Size = New System.Drawing.Size(105, 24)
         Me.CreateJson.TabIndex = 6
-        Me.CreateJson.Text = "Create JSON and start converter"
+        Me.CreateJson.Text = "Create JSON"
         Me.CreateJson.UseVisualStyleBackColor = True
+        '
+        'myProjectID
+        '
+        Me.myProjectID.Location = New System.Drawing.Point(76, 128)
+        Me.myProjectID.MaxLength = 5
+        Me.myProjectID.Name = "myProjectID"
+        Me.myProjectID.Size = New System.Drawing.Size(50, 20)
+        Me.myProjectID.TabIndex = 5
+        Me.myProjectID.WordWrap = False
         '
         'Label2
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(12, 244)
+        Me.Label2.Location = New System.Drawing.Point(12, 129)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(63, 16)
+        Me.Label2.Size = New System.Drawing.Size(60, 16)
         Me.Label2.TabIndex = 4
-        Me.Label2.Text = "projectId:"
-        '
-        'myProjectID
-        '
-        Me.myProjectID.Location = New System.Drawing.Point(78, 243)
-        Me.myProjectID.Maximum = New Decimal(New Integer() {10000, 0, 0, 0})
-        Me.myProjectID.Name = "myProjectID"
-        Me.myProjectID.Size = New System.Drawing.Size(78, 20)
-        Me.myProjectID.TabIndex = 5
-        '
-        'PictureBox1
-        '
-        Me.PictureBox1.Image = CType(resources.GetObject("PictureBox1.Image"), System.Drawing.Image)
-        Me.PictureBox1.Location = New System.Drawing.Point(34, 97)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(508, 28)
-        Me.PictureBox1.TabIndex = 8
-        Me.PictureBox1.TabStop = False
+        Me.Label2.Text = "projectId"
         '
         'FormP2J
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(653, 323)
-        Me.Controls.Add(Me.PictureBox1)
-        Me.Controls.Add(Me.myProjectID)
+        Me.ClientSize = New System.Drawing.Size(578, 156)
         Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.myProjectID)
         Me.Controls.Add(Me.CreateJson)
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.myStatus)
@@ -131,8 +120,6 @@ Partial Class FormP2J
         Me.Controls.Add(Me.Label1)
         Me.Name = "FormP2J"
         Me.Text = "P2J - Project to Json"
-        CType(Me.myProjectID, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -142,7 +129,6 @@ Partial Class FormP2J
     Friend WithEvents myStatus As Label
     Friend WithEvents TextBox1 As TextBox
     Friend WithEvents CreateJson As Button
+    Friend WithEvents myProjectID As TextBox
     Friend WithEvents Label2 As Label
-    Friend WithEvents myProjectID As NumericUpDown
-    Friend WithEvents PictureBox1 As PictureBox
 End Class

@@ -124,10 +124,7 @@
 
 2. Enter this value in the field below
 3. Make sure VPN is active. Then click the button to create the json file extract.
-    Previously created files with same project name will be overwritten.
-    Targetfolder: G:\Shared drives\GA&amp;RA GA Team\WX_Work in Progress\JSONs
-    If in the targetfolder is a folder with same name as the json it will be used to find images.
-    When successful Chrome will start and show the converter with the right file and folder preselected.</value>
+    When successful Chrome will start and show the converter with the right file name.</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="PictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

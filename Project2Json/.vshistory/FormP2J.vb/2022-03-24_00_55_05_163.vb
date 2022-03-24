@@ -218,7 +218,7 @@ Public Class FormP2J
                 Next i
                 myFile.WriteLine("]}")
             End Using
-            ShowError("Status: File generated: " & myFileName, "green")
+            ShowError(myStatus.Text = "Status: File generated: " & myFileName, "green")
             Process.Start("https://script.google.com/a/macros/roche.com/s/AKfycbw1UesP3Xr6y4axkCmzIjCVZhLwVBXldCD1jk6zMp85/dev?file=" & Net.WebUtility.UrlEncode(myFileName))
 
         Catch ex As Exception
