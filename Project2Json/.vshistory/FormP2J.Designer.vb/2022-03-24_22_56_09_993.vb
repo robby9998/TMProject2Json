@@ -30,8 +30,7 @@ Partial Class FormP2J
         Me.CreateJson = New System.Windows.Forms.Button()
         Me.myProjectID = New System.Windows.Forms.NumericUpDown()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.myFile = New System.Windows.Forms.Label()
-        Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
+        Me.Label2 = New System.Windows.Forms.Label()
         CType(Me.myProjectID, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -107,32 +106,21 @@ Partial Class FormP2J
         Me.PictureBox1.TabIndex = 8
         Me.PictureBox1.TabStop = False
         '
-        'myFile
+        'Label2
         '
-        Me.myFile.AutoSize = True
-        Me.myFile.Location = New System.Drawing.Point(15, 340)
-        Me.myFile.Name = "myFile"
-        Me.myFile.Size = New System.Drawing.Size(10, 13)
-        Me.myFile.TabIndex = 6
-        Me.myFile.Text = "-"
-        '
-        'LinkLabel1
-        '
-        Me.LinkLabel1.AutoSize = True
-        Me.LinkLabel1.Location = New System.Drawing.Point(102, 146)
-        Me.LinkLabel1.Name = "LinkLabel1"
-        Me.LinkLabel1.Size = New System.Drawing.Size(319, 13)
-        Me.LinkLabel1.TabIndex = 5
-        Me.LinkLabel1.TabStop = True
-        Me.LinkLabel1.Text = "G:\Shared drives\GA&RA GA Team\WX_Work in Progress\JSONs"
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(15, 340)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(10, 13)
+        Me.Label2.TabIndex = 6
+        Me.Label2.Text = "-"
         '
         'FormP2J
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(791, 367)
-        Me.Controls.Add(Me.LinkLabel1)
-        Me.Controls.Add(Me.myFile)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.PictureBox1)
         Me.Controls.Add(Me.myProjectID)
         Me.Controls.Add(Me.CreateJson)
@@ -155,6 +143,5 @@ Partial Class FormP2J
     Friend WithEvents CreateJson As Button
     Friend WithEvents myProjectID As NumericUpDown
     Friend WithEvents PictureBox1 As PictureBox
-    Friend WithEvents myFile As Label
-    Friend WithEvents LinkLabel1 As LinkLabel
+    Friend WithEvents Label2 As Label
 End Class

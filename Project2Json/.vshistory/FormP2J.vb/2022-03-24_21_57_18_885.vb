@@ -43,13 +43,11 @@ Public Class FormP2J
         Dim myFieldName As String
         Dim myFileName As String
         Dim myRow As String
-        Dim myRowsAdded As Integer
         Dim myRows(500) As String
         Dim myRowsCount As Integer
         Dim myCount As Integer
         Dim myImgCount As Integer
 
-        ShowError("Status: Started.", "green")
         myP_ID = CInt(myProjectID.Value)   ' This should be a valid integer number (0-10000) (actually Decimal > Integer)
 
         ' Select the target folder for json now
@@ -75,7 +73,7 @@ Public Class FormP2J
                     mySql &= "FROM ((dbo.NG_Project INNER JOIN dbo.NG_ContextualAssociation ON dbo.NG_Project.ID = dbo.NG_ContextualAssociation.ContextObjectID) INNER JOIN dbo.TM_CategoryValue ON dbo.NG_Project.Category6CID = dbo.TM_CategoryValue.CategoryID) INNER JOIN dbo.NG_Procedure ON dbo.NG_ContextualAssociation.TargetObjectID = dbo.NG_Procedure.ID "
                     mySql &= "WHERE (((dbo.NG_Project.ID)=" & myP_ID & ") AND ((dbo.NG_Procedure.Title)='Team (incl. Audit Director)' Or (dbo.NG_Procedure.Title)='Distribution List' Or (dbo.NG_Procedure.Title)='Objective & Scope' Or (dbo.NG_Procedure.Title)='Main Findings / Summary' Or (dbo.NG_Procedure.Title)='Opinion' Or (dbo.NG_Procedure.Title)='Organisational Background' Or (dbo.NG_Procedure.Title)='Report Title') AND ((dbo.NG_ContextualAssociation.ContextObjectTypeLID)=81) AND ((dbo.NG_ContextualAssociation.TargetObjectTypeLID)=48));"
                     Using mySQLDataAdapter As New SqlDataAdapter(mySql, mySqlConnection)
-                        myRowsAdded = mySQLDataAdapter.Fill(myDataTable)
+                        mySQLDataAdapter.Fill(myDataTable)
                     End Using
                     If myDataTable.Rows Is Nothing Then
                         ShowError("Status: No data for this projectId.", "red")
@@ -104,7 +102,7 @@ Public Class FormP2J
                     Next
                     myP_Title = myDataTable.Rows(0).Item("P_Title").ToString()
                     myP_Title = Regex.Replace(myP_Title, "\.|:|\\|\/|<|>|\||\?|\*|""", "_")      ' Make sure title can be used on filesystem, replace invalid characters
-                    myP_Title = Regex.Replace(myP_Title, " |-|&|=|\+|\(|\)", "_")                ' Further replace items which do not work well in URL or have special meaning (&=)
+                    myP_Title = Regex.Replace(myP_Title, " |\+|\(|\)", "_")                      ' Further replace items which do not work well in URL                    
 
                     ' Get Scope Areas, i.e. Folders marked "For Report"
                     mySql = "Select 2 As X_Sequence, dbo.NG_Project.ID As P_ID, dbo.NG_Project.Title As P_Title, '-' As P_Code, '-' As P_Grade, '-' As P_Part, '-' As P_Part_Text, '-' As P_Sort, dbo.NG_Folder.Title As S_Title, '-' As F_Number, '-' As F_Title, '-' As F_Rating, '-' As F_Text, '-' As A_Number, '-' As A_Text, '-' As A_Responsible, '-' As A_DueDate "
@@ -114,13 +112,7 @@ Public Class FormP2J
                     mySql &= "Having (((dbo.NG_Project.ID)=" & myP_ID & ")) "
                     mySql &= "Order By dbo.NG_Folder.Title;"
                     Using mySQLDataAdapter As New SqlDataAdapter(mySql, mySqlConnection)
-                        myRowsAdded = mySQLDataAdapter.Fill(myDataTable)
-                        If myRowsAdded = 0 Then
-                            ShowError("Warning: No Folders for Report selected. Will continue shortly.", "red")
-                            MyWait(5)
-                            ShowError("Status: Continuing ...", "green")
-                        End If
-
+                        mySQLDataAdapter.Fill(myDataTable)
                     End Using
 
                     ' Get Findings and Action Plans
@@ -129,12 +121,7 @@ Public Class FormP2J
                     mySql &= "WHERE(((dbo.NG_Project.ID)=" & myP_ID & ") And ((NG_ContextualAssociation_2.ContextObjectTypeLID) = 81) And ((NG_ContextualAssociation_2.SourceObjectTypeLID) = 43) And ((NG_ContextualAssociation_2.TargetObjectTypeLID) = 50) And ((dbo.NG_Issue.YesNo3) = 0)) "
                     mySql &= "ORDER BY dbo.NG_Project.Title, dbo.NG_Issue.Code, dbo.NG_Recommendation.Code;"
                     Using mySQLDataAdapter As New SqlDataAdapter(mySql, mySqlConnection)
-                        myRowsAdded = mySQLDataAdapter.Fill(myDataTable)
-                        If myRowsAdded = 0 Then
-                            ShowError("Warning: No Findings found. Will continue shortly.", "red")
-                            MyWait(5)
-                            ShowError("Status: Continuing ...", "green")
-                        End If
+                        mySQLDataAdapter.Fill(myDataTable)
                     End Using
 
                 End Using
@@ -231,21 +218,12 @@ Public Class FormP2J
                 Next i
                 myFile.WriteLine("]}")
             End Using
-            ShowError("Status: File generated. Waiting a bit for sync to gDrive.", "green")
-            myFile.Text = "Last file created: " & myFileName
-            MyWait(5)   ' Wait to allow gDrive to sync the file from local to cloud
+            ShowError("Status: File generated: " & myFileName, "green")
             Process.Start("https://script.google.com/a/macros/roche.com/s/AKfycbw1UesP3Xr6y4axkCmzIjCVZhLwVBXldCD1jk6zMp85/dev?file=" & Net.WebUtility.UrlEncode(myFileName))
-            ShowError("Status: Done.", "green")
+
         Catch ex As Exception
             ShowError("Exception: " & ex.Message, "red")
         End Try
-    End Sub
-
-    Private Sub MyWait(seconds As Integer)
-        For i As Integer = 0 To seconds * 100
-            System.Threading.Thread.Sleep(10)
-            Application.DoEvents()
-        Next
     End Sub
 
     Sub ShowError(myText As String, myColor As String)

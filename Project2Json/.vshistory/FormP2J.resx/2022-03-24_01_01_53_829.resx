@@ -118,20 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="TextBox1.Text" xml:space="preserve">
-    <value>1. Take the projectId from the GAS URL in Chrome. Enter it here                               .
+    <value>1. Determine the projectId from the gas URL in the browser (Chrome):
         Example:   Here it is 91 ­---------------------------------------------------------v
         https://gas.roche.com/TeamMate/Project#!/Project?projectId=50&amp;assessmentId=14
 
-Notes:
-   Targetfolder: 
-    Previously created json files for same project name will be overwritten. Each run creates new gDoc though.
-    Imagefolder: subfolder of targetfolder with same name as json file without .json
-    Images: jpgs in the image folder with names "001 some text.jpg", "002 other.jpg" in order of appearance
-    When successful the converter will be started after some seconds and prefills json file and image folder.
-   
-2. Have VPN active now. Click the button to continue the process.
-        You can create a new json at any time (e.g. after updates in GAS).
-        Only quit the program when finally done.</value>
+2. Enter this value in the field below
+3. Make sure VPN is active. Then click the button to create the json file extract.
+    Previously created files with same project name will be overwritten.
+    Targetfolder: G:\Shared drives\GA&amp;RA GA Team\WX_Work in Progress\JSONs
+    If in the targetfolder is a folder with same name as the json it will be used to find images.
+    When successful Chrome will start and show the converter with the right file and folder preselected.</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="PictureBox1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

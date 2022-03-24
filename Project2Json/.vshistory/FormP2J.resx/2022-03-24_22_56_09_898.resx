@@ -123,7 +123,7 @@
         https://gas.roche.com/TeamMate/Project#!/Project?projectId=50&amp;assessmentId=14
 
 Notes:
-   Targetfolder: 
+   Targetfolder: G:\Shared drives\GA&amp;RA GA Team\WX_Work in Progress\JSONs    
     Previously created json files for same project name will be overwritten. Each run creates new gDoc though.
     Imagefolder: subfolder of targetfolder with same name as json file without .json
     Images: jpgs in the image folder with names "001 some text.jpg", "002 other.jpg" in order of appearance
