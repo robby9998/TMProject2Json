@@ -1,6 +1,5 @@
 ﻿Option Explicit On                          ' Declare everything
 Imports System.Data.SqlClient               ' SQL handling
-Imports System.Globalization                ' Make date culture independant
 Imports System.Text.RegularExpressions      ' Regular Expressions
 
 ' General Comments
@@ -33,7 +32,26 @@ Public Class FormP2J
     End Function
 
     Private Sub Quit_Click(sender As Object, e As EventArgs) Handles Quit.Click
-        Application.Exit()
+
+
+        Dim table As New DataTable
+
+        ' Create four typed columns in the DataTable.
+        table.Columns.Add("Dosage", GetType(Integer))
+        table.Columns.Add("Drug", GetType(String))
+        table.Columns.Add("Patient", GetType(String))
+        table.Columns.Add("Date", GetType(DateTime))
+
+        ' Add five rows with those columns filled in the DataTable.
+        table.Rows.Add(25, "Indocin", "David", DateTime.Now)
+        table.Rows.Add(50, "Enebrel", "Sam", DateTime.Now)
+        table.Rows.Add(10, "Hydralazine", "Christoff", DateTime.Now)
+        table.Rows.Add(21, "Combivent", "Janet", DateTime.Now)
+        table.Rows.Add(100, "Dilantin", "Melanie", DateTime.Now)
+
+        Debug.Print(table.Rows(0).Item(3).ToString("MM'/'dd'/'yyyy"), CInt(New CultureInfo("en-US")))
+        Debug.Print(table.Rows(1).Item(3).ToString("MM'/'dd'/'yyyy"), CInt(New CultureInfo("en-US")))
+        'Application.Exit()
     End Sub
 
     Private Sub CreateJson_Click(sender As Object, e As EventArgs) Handles CreateJson.Click
@@ -49,7 +67,6 @@ Public Class FormP2J
         Dim myRowsCount As Integer
         Dim myCount As Integer
         Dim myImgCount As Integer
-        Dim myDate As DateTime
 
         ShowError("Status: Started.", "green")
         myP_ID = CInt(myProjectID.Value)   ' This should be a valid integer number (0-10000) (actually Decimal > Integer)
@@ -122,6 +139,7 @@ Public Class FormP2J
                             MyWait(5)
                             ShowError("Status: Continuing ...", "green")
                         End If
+
                     End Using
 
                     ' Get Findings and Action Plans
@@ -151,53 +169,45 @@ Public Class FormP2J
                             myFieldName = mySortedTable.Columns(i).ColumnName.ToString()
 
                             If Not IsDBNull(myDataRow.Item(i)) Then
-                                If myDataRow.Item(i).GetType().ToString() = "System.DateTime" Then
-                                    ' For DateTime it is important to be independant from any system setting, normal .Tostring() converts data dependent on regional settings
-                                    ' This here always produces M/D/YYYY, i.e. US format no matter what the setting
-                                    myDate = CType(myDataRow.Item(i), DateTime)
-                                    myText = myDate.ToString("d", CultureInfo.InvariantCulture)
-                                Else
-                                    ' For anything else toString is ok
-                                    myText = myDataRow.Item(i).ToString
-                                    ' remove linebreaks & tabs from any field, escape special characters
-                                    myText = Replace(myText, Chr(92), "\\")          ' Backslash, attention this needs to be done first, before other \s are introduced
-                                    myText = Replace(myText, Chr(13), "")            ' CR Carriage Return
-                                    myText = Replace(myText, Chr(10), "")            ' LF Line Feed
-                                    myText = Replace(myText, Chr(12), "")            ' FF Form Feed
-                                    myText = Replace(myText, Chr(9), "")             ' Horizontal Tab
-                                    myText = Replace(myText, Chr(11), "")            ' Vertical Tab
-                                    myText = Replace(myText, Chr(7), "")             ' Bell
-                                    myText = Replace(myText, Chr(8), "")             ' Backspace
-                                    myText = Replace(myText, Chr(34), "\" & Chr(34)) ' Quote
-                                    myText = Replace(myText, Chr(47), "\/")          ' Slash
-                                    ' encode any remaining control characters 0-31
-                                    For j As Integer = 0 To 9
-                                        myText = Replace(myText, Chr(i), "\000" & i)
-                                    Next j
-                                    For j As Integer = 10 To 31
-                                        myText = Replace(myText, Chr(i), "\00" & i)
-                                    Next j
-                                    If Len(myText) > 6 Then
-                                        If myText.Substring(0, 6) = "<html>" Then
-                                            ' Find now the pictures
-                                            For Each myMatch As Match In Regex.Matches(myText, "(<img)(.+?)(\/>)", RegexOptions.IgnoreCase Or RegexOptions.Multiline)
-                                                ' Replace only 1st occurence each time; normal Replace will replace all occurences in one go, given they link to the same picture
-                                                ' Problem with regEx: the pattern contains special characters, which results in parsing exception
-                                                ' Dim myRegExp As New Regex(myMatch.Value)
-                                                ' myText = myRegExp.Replace(myText, "#img" & myImgCount & "#", 1)
-                                                myText = Replace(myText, myMatch.Value, "#img" & myImgCount & "#",, 1)     ' Magic lies in the ,1 which tells to replace only 1 time
-                                                myImgCount += 1
-                                            Next
+                                myText = myDataRow.Item(i).ToString
+                                ' remove linebreaks & tabs from any field, escape special characters
+                                myText = Replace(myText, Chr(92), "\\")          ' Backslash, attention this needs to be done first, before other \s are introduced
+                                myText = Replace(myText, Chr(13), "")            ' CR Carriage Return
+                                myText = Replace(myText, Chr(10), "")            ' LF Line Feed
+                                myText = Replace(myText, Chr(12), "")            ' FF Form Feed
+                                myText = Replace(myText, Chr(9), "")             ' Horizontal Tab
+                                myText = Replace(myText, Chr(11), "")            ' Vertical Tab
+                                myText = Replace(myText, Chr(7), "")             ' Bell
+                                myText = Replace(myText, Chr(8), "")             ' Backspace
+                                myText = Replace(myText, Chr(34), "\" & Chr(34)) ' Quote
+                                myText = Replace(myText, Chr(47), "\/")          ' Slash
+                                ' encode any remaining control characters 0-31
+                                For j As Integer = 0 To 9
+                                    myText = Replace(myText, Chr(i), "\000" & i)
+                                Next j
+                                For j As Integer = 10 To 31
+                                    myText = Replace(myText, Chr(i), "\00" & i)
+                                Next j
+                                If Len(myText) > 6 Then
+                                    If myText.Substring(0, 6) = "<html>" Then
+                                        ' Find now the pictures
+                                        For Each myMatch As Match In Regex.Matches(myText, "(<img)(.+?)(\/>)", RegexOptions.IgnoreCase Or RegexOptions.Multiline)
+                                            ' Replace only 1st occurence each time; normal Replace will replace all occurences in one go, given they link to the same picture
+                                            ' Problem with regEx: the pattern contains special characters, which results in parsing exception
+                                            ' Dim myRegExp As New Regex(myMatch.Value)
+                                            ' myText = myRegExp.Replace(myText, "#img" & myImgCount & "#", 1)
+                                            myText = Replace(myText, myMatch.Value, "#img" & myImgCount & "#",, 1)     ' Magic lies in the ,1 which tells to replace only 1 time
+                                            myImgCount += 1
+                                        Next
 
-                                            ' Clean html (remove some tags, remove attributes from some other tags), DO NOT replace soft linebreaks in paragraphs (other wise destroys validity of html)
-                                            myText = Regex.Replace(myText, "(<(span|html|grammarly|div|teammatelink|\\/span|\\/html|\\/div).*?>)|((<)(body|tr|td|table|p|strong|em|li)\s(.*?)(>))", "$4$5$7")
-                                            ' ATTENTION: This broke the validity of html:
-                                            ' a) when there is "<p>text as sjkd  <strong> hsjdshdj <br /> skjdh sh sjks j </strong> dsjhdk</p> " => this is ok and valid
-                                            ' b) this becomes  "<p>text as sjkd  <strong> hsjdshdj </p><p> skjdh sh sjks j </strong> sasa</p>" => this is invalid because <strong> is closed with </p>
-                                            ' In the editor when text is produced with paragraph it codes as "<p> text sgj <strong> djhsk </strong></p><p><strong>hsdkshd ksjd skd </strong> sdhsdj </p> => this is ok as well
-                                            ' myText = Replace(myText, "<br />", "</p><p>")
-                                            ' myText = Replace(myText, "<br/>", "</p><p>")
-                                        End If
+                                        ' Clean html (remove some tags, remove attributes from some other tags), DO NOT replace soft linebreaks in paragraphs (other wise destroys validity of html)
+                                        myText = Regex.Replace(myText, "(<(span|html|grammarly|div|teammatelink|\\/span|\\/html|\\/div).*?>)|((<)(body|tr|td|table|p|strong|em|li)\s(.*?)(>))", "$4$5$7")
+                                        ' ATTENTION: This broke the validity of html:
+                                        ' a) when there is "<p>text as sjkd  <strong> hsjdshdj <br /> skjdh sh sjks j </strong> dsjhdk</p> " => this is ok and valid
+                                        ' b) this becomes  "<p>text as sjkd  <strong> hsjdshdj </p><p> skjdh sh sjks j </strong> sasa</p>" => this is invalid because <strong> is closed with </p>
+                                        ' In the editor when text is produced with paragraph it codes as "<p> text sgj <strong> djhsk </strong></p><p><strong>hsdkshd ksjd skd </strong> sdhsdj </p> => this is ok as well
+                                        ' myText = Replace(myText, "<br />", "</p><p>")
+                                        ' myText = Replace(myText, "<br/>", "</p><p>")
                                     End If
                                 End If
                             Else

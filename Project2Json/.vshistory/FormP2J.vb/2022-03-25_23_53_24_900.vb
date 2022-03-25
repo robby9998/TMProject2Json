@@ -33,7 +33,34 @@ Public Class FormP2J
     End Function
 
     Private Sub Quit_Click(sender As Object, e As EventArgs) Handles Quit.Click
-        Application.Exit()
+
+
+        Dim table As New DataTable
+
+        ' Create four typed columns in the DataTable.
+        table.Columns.Add("Dosage", GetType(Integer))
+        table.Columns.Add("Drug", GetType(String))
+        table.Columns.Add("Patient", GetType(String))
+        table.Columns.Add("Date", GetType(DateTime))
+
+        ' Add five rows with those columns filled in the DataTable.
+        table.Rows.Add(25, "Indocin", "David", DateTime.Now)
+        table.Rows.Add(50, "Enebrel", "Sam", DateTime.Now)
+        table.Rows.Add(10, "Hydralazine", "Christoff", DateTime.Now)
+        table.Rows.Add(21, "Combivent", "Janet", DateTime.Now)
+        table.Rows.Add(100, "Dilantin", "Melanie", DateTime.Now)
+
+        'Dim culture As CultureInfo = CultureInfo.CreateSpecificCulture("en-US")
+        'Dim dtfi As DateTimeFormatInfo = culture.DateTimeFormat
+        'dtfi.DateSeparator = "-"
+        'ToString("d", dtfi)
+        Dim myDate As DateTime
+        myDate = CType(table.Rows(0).Item(3), DateTime)
+        Debug.Print(table.Rows(0).Item(3).GetType().ToString)
+
+        Debug.Print(myDate.ToString("d", CultureInfo.InvariantCulture))
+        Debug.Print(table.Rows(1).Item(3).ToString())
+        'Application.Exit()
     End Sub
 
     Private Sub CreateJson_Click(sender As Object, e As EventArgs) Handles CreateJson.Click
@@ -151,9 +178,8 @@ Public Class FormP2J
                             myFieldName = mySortedTable.Columns(i).ColumnName.ToString()
 
                             If Not IsDBNull(myDataRow.Item(i)) Then
-                                If myDataRow.Item(i).GetType().ToString() = "System.DateTime" Then
-                                    ' For DateTime it is important to be independant from any system setting, normal .Tostring() converts data dependent on regional settings
-                                    ' This here always produces M/D/YYYY, i.e. US format no matter what the setting
+                                If True Then
+                                    'If myDataRow.Item(i).GetType() = "DateTime" Then
                                     myDate = CType(myDataRow.Item(i), DateTime)
                                     myText = myDate.ToString("d", CultureInfo.InvariantCulture)
                                 Else
