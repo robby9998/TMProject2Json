@@ -257,11 +257,4 @@ Public Class FormP2J
         End If
     End Sub
 
-    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
-        Try
-            Process.Start("G:\Shared drives\GA&RA GA Team\WX_Work in Progress\JSONs\")
-        Catch ex As Exception
-            ShowError("Exception: " & ex.Message, "red")
-        End Try
-    End Sub
 End Class
