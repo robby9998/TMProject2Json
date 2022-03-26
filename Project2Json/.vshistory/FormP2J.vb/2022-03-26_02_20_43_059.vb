@@ -24,7 +24,6 @@ Public Class FormP2J
     Private Sub FormP2J_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         ' Set Focus to entry field
         myProjectID.Select()
-        myVersion.Text = "Version:" & Me.GetType.Assembly.GetName.Version.ToString()
         ShowError("Status: Enter a Project ID", "green")
     End Sub
 

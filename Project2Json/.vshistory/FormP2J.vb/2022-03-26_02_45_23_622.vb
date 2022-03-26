@@ -19,12 +19,12 @@ Public Class FormP2J
     Private Sub FormP2J_Load()
         myRED = Color.FromArgb(255, 50, 50)
         myGreen = Color.FromArgb(50, 255, 50)
+        myVersion.Text = "Version:" & Me.GetType.Assembly.GetName.Version.ToString()
     End Sub
 
     Private Sub FormP2J_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         ' Set Focus to entry field
         myProjectID.Select()
-        myVersion.Text = "Version:" & Me.GetType.Assembly.GetName.Version.ToString()
         ShowError("Status: Enter a Project ID", "green")
     End Sub
 

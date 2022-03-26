@@ -132,7 +132,7 @@ Partial Class FormP2J
         'myVersion
         '
         Me.myVersion.AutoSize = True
-        Me.myVersion.Location = New System.Drawing.Point(694, 340)
+        Me.myVersion.Location = New System.Drawing.Point(724, 340)
         Me.myVersion.Name = "myVersion"
         Me.myVersion.Size = New System.Drawing.Size(45, 13)
         Me.myVersion.TabIndex = 8

@@ -32,11 +32,8 @@ Partial Class FormP2J
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.myFile = New System.Windows.Forms.Label()
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
-        Me.myVersion = New System.Windows.Forms.Label()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         CType(Me.myProjectID, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Label1
@@ -129,33 +126,11 @@ Partial Class FormP2J
         Me.LinkLabel1.TabStop = True
         Me.LinkLabel1.Text = "G:\Shared drives\GA&RA GA Team\WX_Work in Progress\JSONs"
         '
-        'myVersion
-        '
-        Me.myVersion.AutoSize = True
-        Me.myVersion.Location = New System.Drawing.Point(694, 340)
-        Me.myVersion.Name = "myVersion"
-        Me.myVersion.Size = New System.Drawing.Size(45, 13)
-        Me.myVersion.TabIndex = 8
-        Me.myVersion.Text = "Version:"
-        Me.myVersion.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'PictureBox2
-        '
-        Me.PictureBox2.Image = CType(resources.GetObject("PictureBox2.Image"), System.Drawing.Image)
-        Me.PictureBox2.Location = New System.Drawing.Point(704, 7)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(81, 40)
-        Me.PictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.PictureBox2.TabIndex = 9
-        Me.PictureBox2.TabStop = False
-        '
         'FormP2J
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(791, 367)
-        Me.Controls.Add(Me.PictureBox2)
-        Me.Controls.Add(Me.myVersion)
         Me.Controls.Add(Me.LinkLabel1)
         Me.Controls.Add(Me.myFile)
         Me.Controls.Add(Me.PictureBox1)
@@ -169,7 +144,6 @@ Partial Class FormP2J
         Me.Text = "P2J - Project to Json"
         CType(Me.myProjectID, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -183,6 +157,4 @@ Partial Class FormP2J
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents myFile As Label
     Friend WithEvents LinkLabel1 As LinkLabel
-    Friend WithEvents myVersion As Label
-    Friend WithEvents PictureBox2 As PictureBox
 End Class
