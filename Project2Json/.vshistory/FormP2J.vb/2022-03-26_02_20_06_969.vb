@@ -50,6 +50,7 @@ Public Class FormP2J
         Dim myCount As Integer
         Dim myImgCount As Integer
         Dim myDate As DateTime
+        Dim myLog As String
 
         ShowError("Status: Started.", "green")
         myP_ID = CInt(myProjectID.Value)   ' This should be a valid integer number (0-10000) (actually Decimal > Integer)
@@ -145,6 +146,7 @@ Public Class FormP2J
                 myDataTable.DefaultView.Sort = "X_Sequence ASC, P_Sort ASC, F_Number ASC, A_Number ASC"
 
                 myImgCount = 1
+                myLog = ""
                 Using mySortedTable As DataTable = myDataTable.DefaultView.ToTable
                     For Each myDataRow As DataRow In mySortedTable.Rows
                         myRow = ""
@@ -240,6 +242,7 @@ Public Class FormP2J
                     End If
                 Next i
                 myFile.WriteLine("]}")
+                myFile.WriteLine(myLog)
             End Using
             ShowError("Status: File generated. Waiting a bit for sync to gDrive.", "green")
             myFile.Text = "Last file created: " & myFileName

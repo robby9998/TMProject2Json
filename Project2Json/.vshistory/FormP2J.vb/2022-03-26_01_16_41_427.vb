@@ -57,7 +57,6 @@ Public Class FormP2J
         ' Select the target folder for json now
         ' RS: #TODO: Potentially need to check for exceptions
         ' Check for G:
-
         Try
             If Not (IO.Directory.Exists("G:\")) Then
                 ShowError("Status: G:\ Drive not found. Please install/run Google Drive.", "red")
@@ -74,7 +73,7 @@ Public Class FormP2J
                     ' Sort the list by Sequence, P_Sort, F_Number, A_Number  (as there is only one project, no sort by project ID is needed)
 
                     ' Get Project Info
-                    mySql = "SELECT 1 AS X_Sequence, dbo.NG_Project.ID AS P_ID, dbo.NG_Project.Title AS P_Title, dbo.NG_Project.Code AS P_Code, ISNULL(dbo.TM_CategoryValue.Name,'GAS: not filled') AS P_Grade, dbo.NG_Procedure.Title AS P_Part, dbo.NG_Procedure.Text1 AS P_Part_Text, 'X' AS P_Sort, '-' AS S_Title, '-' AS F_Number, '-' AS F_Title, '-' AS F_Rating, '-' AS F_Text, '-' AS A_Number, '-' AS A_Text, '-' AS A_Responsible, CAST('1900-01-01' AS DATETIME) AS A_DueDate "
+                    mySql = "SELECT 1 AS X_Sequence, dbo.NG_Project.ID AS P_ID, dbo.NG_Project.Title AS P_Title, dbo.NG_Project.Code AS P_Code, ISNULL(dbo.TM_CategoryValue.Name,'GAS: not filled') AS P_Grade, dbo.NG_Procedure.Title AS P_Part, dbo.NG_Procedure.Text1 AS P_Part_Text, 'X' AS P_Sort, '-' AS S_Title, '-' AS F_Number, '-' AS F_Title, '-' AS F_Rating, '-' AS F_Text, '-' AS A_Number, '-' AS A_Text, '-' AS A_Responsible, '-' AS A_DueDate "
                     mySql &= "FROM ((dbo.NG_Project INNER JOIN dbo.NG_ContextualAssociation ON dbo.NG_Project.ID = dbo.NG_ContextualAssociation.ContextObjectID) INNER JOIN dbo.TM_CategoryValue ON dbo.NG_Project.Category6CID = dbo.TM_CategoryValue.CategoryID) INNER JOIN dbo.NG_Procedure ON dbo.NG_ContextualAssociation.TargetObjectID = dbo.NG_Procedure.ID "
                     mySql &= "WHERE (((dbo.NG_Project.ID)=" & myP_ID & ") AND ((dbo.NG_Procedure.Title)='Team (incl. Audit Director)' Or (dbo.NG_Procedure.Title)='Distribution List' Or (dbo.NG_Procedure.Title)='Objective & Scope' Or (dbo.NG_Procedure.Title)='Main Findings / Summary' Or (dbo.NG_Procedure.Title)='Opinion' Or (dbo.NG_Procedure.Title)='Organisational Background' Or (dbo.NG_Procedure.Title)='Report Title') AND ((dbo.NG_ContextualAssociation.ContextObjectTypeLID)=81) AND ((dbo.NG_ContextualAssociation.TargetObjectTypeLID)=48));"
                     Using mySQLDataAdapter As New SqlDataAdapter(mySql, mySqlConnection)
@@ -110,7 +109,7 @@ Public Class FormP2J
                     myP_Title = Regex.Replace(myP_Title, " |-|&|=|\+|\(|\)", "_")                ' Further replace items which do not work well in URL or have special meaning (&=)
 
                     ' Get Scope Areas, i.e. Folders marked "For Report"
-                    mySql = "Select 2 As X_Sequence, dbo.NG_Project.ID As P_ID, dbo.NG_Project.Title As P_Title, '-' As P_Code, '-' As P_Grade, '-' As P_Part, '-' As P_Part_Text, '-' As P_Sort, dbo.NG_Folder.Title As S_Title, '-' As F_Number, '-' As F_Title, '-' As F_Rating, '-' As F_Text, '-' As A_Number, '-' As A_Text, '-' As A_Responsible, CAST('1900-01-01' AS DATETIME) As A_DueDate "
+                    mySql = "Select 2 As X_Sequence, dbo.NG_Project.ID As P_ID, dbo.NG_Project.Title As P_Title, '-' As P_Code, '-' As P_Grade, '-' As P_Part, '-' As P_Part_Text, '-' As P_Sort, dbo.NG_Folder.Title As S_Title, '-' As F_Number, '-' As F_Title, '-' As F_Rating, '-' As F_Text, '-' As A_Number, '-' As A_Text, '-' As A_Responsible, '-' As A_DueDate "
                     mySql &= "From dbo.NG_Project INNER Join (dbo.NG_ContextualAssociation As NG_ContextualAssociation_2 INNER Join dbo.NG_Folder On NG_ContextualAssociation_2.SourceObjectID = dbo.NG_Folder.ID) ON dbo.NG_Project.ID = NG_ContextualAssociation_2.ContextObjectID "
                     mySql &= "Where (((NG_ContextualAssociation_2.SourceObjectTypeLID) = 166) And ((NG_ContextualAssociation_2.ContextObjectTypeLID) = 81) And ((dbo.NG_Folder.YesNo2) = 1)) "
                     mySql &= "Group By dbo.NG_Project.ID, dbo.NG_Project.Title, dbo.NG_Folder.Title "
@@ -154,9 +153,9 @@ Public Class FormP2J
                             If Not IsDBNull(myDataRow.Item(i)) Then
                                 If myDataRow.Item(i).GetType().ToString() = "System.DateTime" Then
                                     ' For DateTime it is important to be independant from any system setting, normal .Tostring() converts data dependent on regional settings
-                                    ' This here always produces YYYY-MM-DD, i.e. US format no matter what the setting
+                                    ' This here always produces M/D/YYYY, i.e. US format no matter what the setting
                                     myDate = CType(myDataRow.Item(i), DateTime)
-                                    myText = myDate.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)
+                                    myText = myDate.ToString("MM/dd/yyyy", CultureInfo.InvariantCulture)
                                 Else
                                     ' For anything else toString is ok
                                     myText = myDataRow.Item(i).ToString
