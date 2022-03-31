@@ -2,6 +2,8 @@
 Imports System.Data.SqlClient               ' SQL handling
 Imports System.Globalization                ' Make date culture independant
 Imports System.Text.RegularExpressions      ' Regular Expressions
+Imports System.Deployment.Application       ' For getting Publish Number
+
 
 ' General Comments
 ' ================
@@ -24,7 +26,11 @@ Public Class FormP2J
     Private Sub FormP2J_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
         ' Set Focus to entry field
         myProjectID.Select()
-        myVersion.Text = "Version:" & Me.GetType.Assembly.GetName.Version.ToString()
+        If Not (Debugger.IsAttached) And ApplicationDeployment.IsNetworkDeployed Then
+            myVersion.Text = "Version NW:" & ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString()
+        Else
+            myVersion.Text = "Version AS:" & Me.GetType.Assembly.GetName.Version.ToString()
+        End If
         ShowError("Status: Enter a Project ID", "green")
     End Sub
 
@@ -52,7 +58,7 @@ Public Class FormP2J
         Dim myImgCount As Integer
         Dim myDate As DateTime
 
-        ShowError("Status: Started.", "green")
+        ShowError("Status: Started json file generation.", "green")
         myP_ID = CInt(myProjectID.Value)   ' This should be a valid integer number (0-10000) (actually Decimal > Integer)
 
         ' Select the target folder for json now
@@ -76,7 +82,7 @@ Public Class FormP2J
 
                     ' Get Project Info
                     mySql = "SELECT 1 AS X_Sequence, dbo.NG_Project.ID AS P_ID, dbo.NG_Project.Title AS P_Title, dbo.NG_Project.Code AS P_Code, ISNULL(dbo.TM_CategoryValue.Name,'GAS: not filled') AS P_Grade, dbo.NG_Procedure.Title AS P_Part, dbo.NG_Procedure.Text1 AS P_Part_Text, 'X' AS P_Sort, '-' AS S_Title, '-' AS F_Number, '-' AS F_Title, '-' AS F_Rating, '-' AS F_Text, '-' AS A_Number, '-' AS A_Text, '-' AS A_Responsible, CAST('1900-01-01' AS DATETIME) AS A_DueDate "
-                    mySql &= "FROM ((dbo.NG_Project INNER JOIN dbo.NG_ContextualAssociation ON dbo.NG_Project.ID = dbo.NG_ContextualAssociation.ContextObjectID) INNER JOIN dbo.TM_CategoryValue ON dbo.NG_Project.Category6CID = dbo.TM_CategoryValue.CategoryID) INNER JOIN dbo.NG_Procedure ON dbo.NG_ContextualAssociation.TargetObjectID = dbo.NG_Procedure.ID "
+                    mySql &= "FROM ((dbo.NG_Project INNER JOIN dbo.NG_ContextualAssociation ON dbo.NG_Project.ID = dbo.NG_ContextualAssociation.ContextObjectID) LEFT JOIN dbo.TM_CategoryValue ON dbo.NG_Project.Category6CID = dbo.TM_CategoryValue.CategoryID) INNER JOIN dbo.NG_Procedure ON dbo.NG_ContextualAssociation.TargetObjectID = dbo.NG_Procedure.ID "
                     mySql &= "WHERE (((dbo.NG_Project.ID)=" & myP_ID & ") AND ((dbo.NG_Procedure.Title)='Team (incl. Audit Director)' Or (dbo.NG_Procedure.Title)='Distribution List' Or (dbo.NG_Procedure.Title)='Objective & Scope' Or (dbo.NG_Procedure.Title)='Main Findings / Summary' Or (dbo.NG_Procedure.Title)='Opinion' Or (dbo.NG_Procedure.Title)='Organisational Background' Or (dbo.NG_Procedure.Title)='Report Title') AND ((dbo.NG_ContextualAssociation.ContextObjectTypeLID)=81) AND ((dbo.NG_ContextualAssociation.TargetObjectTypeLID)=48));"
                     Using mySQLDataAdapter As New SqlDataAdapter(mySql, mySqlConnection)
                         myRowsAdded = mySQLDataAdapter.Fill(myDataTable)
@@ -274,5 +280,13 @@ Public Class FormP2J
         Catch ex As Exception
             ShowError("Exception: " & ex.Message, "red")
         End Try
+    End Sub
+
+    Private Sub ProjectIDChange(sender As Object, e As EventArgs) Handles myProjectID.ValueChanged
+        If CInt(myProjectID.Value) <> 0 Then
+            ShowError("Status ID entered: " & CInt(myProjectID.Value), "green")
+        Else
+            ShowError("Status: Enter a Project ID", "green")
+        End If
     End Sub
 End Class

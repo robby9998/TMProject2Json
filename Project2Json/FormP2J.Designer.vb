@@ -25,7 +25,6 @@ Partial Class FormP2J
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(FormP2J))
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Quit = New System.Windows.Forms.Button()
-        Me.myStatus = New System.Windows.Forms.Label()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
         Me.CreateJson = New System.Windows.Forms.Button()
         Me.myProjectID = New System.Windows.Forms.NumericUpDown()
@@ -34,6 +33,7 @@ Partial Class FormP2J
         Me.LinkLabel1 = New System.Windows.Forms.LinkLabel()
         Me.myVersion = New System.Windows.Forms.Label()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
+        Me.myStatus = New System.Windows.Forms.TextBox()
         CType(Me.myProjectID, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -43,7 +43,7 @@ Partial Class FormP2J
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.0!)
-        Me.Label1.Location = New System.Drawing.Point(12, 32)
+        Me.Label1.Location = New System.Drawing.Point(12, 44)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(425, 13)
         Me.Label1.TabIndex = 2
@@ -60,16 +60,6 @@ Partial Class FormP2J
         Me.Quit.TabIndex = 7
         Me.Quit.Text = "Quit"
         Me.Quit.UseVisualStyleBackColor = False
-        '
-        'myStatus
-        '
-        Me.myStatus.AutoSize = True
-        Me.myStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.myStatus.Location = New System.Drawing.Point(11, 15)
-        Me.myStatus.Name = "myStatus"
-        Me.myStatus.Size = New System.Drawing.Size(133, 13)
-        Me.myStatus.TabIndex = 1
-        Me.myStatus.Text = "Status: Just started ..."
         '
         'TextBox1
         '
@@ -149,11 +139,25 @@ Partial Class FormP2J
         Me.PictureBox2.TabIndex = 9
         Me.PictureBox2.TabStop = False
         '
+        'myStatus
+        '
+        Me.myStatus.BackColor = System.Drawing.SystemColors.Control
+        Me.myStatus.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.myStatus.Enabled = False
+        Me.myStatus.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.myStatus.Location = New System.Drawing.Point(15, 7)
+        Me.myStatus.Multiline = True
+        Me.myStatus.Name = "myStatus"
+        Me.myStatus.Size = New System.Drawing.Size(683, 34)
+        Me.myStatus.TabIndex = 1
+        Me.myStatus.Text = "Status: Just started the program."
+        '
         'FormP2J
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(791, 367)
+        Me.Controls.Add(Me.myStatus)
         Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.myVersion)
         Me.Controls.Add(Me.LinkLabel1)
@@ -162,7 +166,6 @@ Partial Class FormP2J
         Me.Controls.Add(Me.myProjectID)
         Me.Controls.Add(Me.CreateJson)
         Me.Controls.Add(Me.TextBox1)
-        Me.Controls.Add(Me.myStatus)
         Me.Controls.Add(Me.Quit)
         Me.Controls.Add(Me.Label1)
         Me.Name = "FormP2J"
@@ -176,7 +179,6 @@ Partial Class FormP2J
     End Sub
     Friend WithEvents Label1 As Label
     Friend WithEvents Quit As Button
-    Friend WithEvents myStatus As Label
     Friend WithEvents TextBox1 As TextBox
     Friend WithEvents CreateJson As Button
     Friend WithEvents myProjectID As NumericUpDown
@@ -185,4 +187,5 @@ Partial Class FormP2J
     Friend WithEvents LinkLabel1 As LinkLabel
     Friend WithEvents myVersion As Label
     Friend WithEvents PictureBox2 As PictureBox
+    Friend WithEvents myStatus As TextBox
 End Class
